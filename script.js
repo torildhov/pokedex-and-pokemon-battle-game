@@ -1,0 +1,1 @@
+console.log("Sjekker om det funker")
