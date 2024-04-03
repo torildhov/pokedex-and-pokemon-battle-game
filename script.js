@@ -52,6 +52,7 @@ function showAllPokemons() {
         //console.log(pokemon.name); - virker
 
         document.body.style.padding = "50px 150px"
+       
 
         const pokemonCard = document.createElement("div");
         pokemonCard.style.border = "1px solid grey"
@@ -59,6 +60,8 @@ function showAllPokemons() {
         pokemonCard.style.flexDirection = "column"
         pokemonCard.style.alignItems = "center"
         pokemonCard.style.flexBasis = "auto"
+        pokemonCard.style.borderRadius = "10px"
+    
         
         //Lagre knapp
         const saveBtn = document.createElement("button");
@@ -109,7 +112,28 @@ function showAllPokemons() {
     });
 }
 
+showAllPokemons();
 
+//OPPGAVE 1.2 - FILTRERING OG STYLING AV ALLE POKEMON
 
+function loadButtons() {
+    let btnsContainer = document.getElementById("btns-container");
+    btnsContainer.style.display = "grid"
+    btnsContainer.style.grid = "auto auto/repeat(6, auto)"
+    btnsContainer.style.gap = "15px"
+    btnsContainer.style.padding = "0 0 40px 0"
+
+    for (let i = 0; i < 18; i++) {
+        let typeBtn = document.createElement("button");
+        typeBtn.innerHTML = `<img src="/assets/${[i]}.png">`;
+        typeBtn.id = `type-btn-${[i]}`
+        typeBtn.style.borderRadius = "10px"
+    
+        btnsContainer.appendChild(typeBtn);
+        //console.log("Inne i btns") - virker
+    }
+}
+
+loadButtons();
 
 
