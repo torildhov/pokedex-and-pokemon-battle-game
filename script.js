@@ -91,7 +91,10 @@ function showAllPokemons() {
     //Lagre knapp
     const saveBtn = document.createElement("button");
     saveBtn.innerHTML = "Lagre";
-    saveBtn.style.backgroundColor = "white";
+      saveBtn.style.backgroundColor = "white";
+      saveBtn.style.borderRadius = "10px";
+      saveBtn.style.border = "1px solid grey";
+      saveBtn.style.padding = "5px";
 
     saveBtn.addEventListener("click", function () {
       savePokemon(index);
@@ -100,7 +103,10 @@ function showAllPokemons() {
     //Slette knapp
     const deleteBtn = document.createElement("button");
     deleteBtn.innerHTML = "Slett";
-    deleteBtn.style.backgroundColor = "white";
+      deleteBtn.style.backgroundColor = "white";
+      deleteBtn.style.borderRadius = "10px";
+      deleteBtn.style.border = "1px solid grey";
+      deleteBtn.style.padding = "5px"
 
     deleteBtn.addEventListener("click", function () {
       deletePokemon(index);
@@ -112,6 +118,7 @@ function showAllPokemons() {
       editBtn.style.backgroundColor = "white";
       editBtn.style.borderRadius = "10px"
       editBtn.style.border = "1px solid grey"
+      editBtn.style.padding = "5px";
 
     editBtn.addEventListener("click", function () {
       editPokemon(index);
