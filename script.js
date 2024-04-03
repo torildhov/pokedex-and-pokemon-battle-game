@@ -63,7 +63,7 @@ function showAllPokemons() {
 
   const btnsContainer = document.getElementById("btns-container");
   btnsContainer.style.display = "grid";
-    btnsContainer.style.grid = "repeat(3,auto)/repeat(6, auto)";
+    btnsContainer.style.grid = "auto auto auto/repeat(6, auto)";
     btnsContainer.style.gap = "10px"
     btnsContainer.style.padding = "20px 20px"
     
