@@ -74,7 +74,7 @@ function showAllPokemons() {
   pokemonContainer.style.gap = "10px";
 
   pokemonData.forEach((pokemon, index) => {
-    //console.log(pokemon.name); - virker
+      //console.log(pokemon.name); - virker
 
     document.body.style.padding = "50px 150px";
 
@@ -95,10 +95,11 @@ function showAllPokemons() {
     saveBtn.style.backgroundColor = "white";
     saveBtn.style.borderRadius = "10px";
     saveBtn.style.border = "1px solid grey";
-    saveBtn.style.padding = "5px";
+      saveBtn.style.padding = "5px";
+      saveBtn.id = "save-btn"
 
-    saveBtn.addEventListener("click", function () {
-      savePokemon(index);
+    saveBtn.addEventListener("click", () => {
+      togglePokemons(index);
     });
 
     //Slette knapp
@@ -109,7 +110,7 @@ function showAllPokemons() {
     deleteBtn.style.border = "1px solid grey";
     deleteBtn.style.padding = "5px";
 
-    deleteBtn.addEventListener("click", function () {
+    deleteBtn.addEventListener("click", () => {
       deletePokemon(index);
     });
 
@@ -136,6 +137,8 @@ function showAllPokemons() {
         <h3>Type: ${pokemon.type}</h4>
         `;
 
+      pokemon.savedStatus = false;
+      
     btnsDiv.append(saveBtn, deleteBtn, editBtn);
 
     pokemonCard.append(btnsDiv);
@@ -172,6 +175,8 @@ function filterPokemons(filter, type) {
                 <h3>Navn: ${pokemon.name}</h3>
             <h3>Type: ${pokemon.type}</h4>
         `;
+
+        pokemon.savedStatus = false;
 
       pokemonContainer.append(filteredPokemonCard);
     });
@@ -224,11 +229,82 @@ function makeNewPokemon() {
   pokemonData.unshift(newPokemon);
   showAllPokemons();
 
-  localStorage.setItem("savedPokemons", JSON.stringify(newPokemon));
+  localStorage.setItem("savedNewPokemons", JSON.stringify(newPokemon));
 }
 
 const newPokemonBtn = document.getElementById("new-pokemon-btn");
 newPokemonBtn.addEventListener("click", () => {
   makeNewPokemon();
 });
+
+
+//OPPGAVE 1.5 - lagre favoritt pokemon
+//TRENGER Å FIKSE: lagrefunksjonen når ny pokemon lagres. De andre allerede lagrede pokemonene
+//forsvinner når jeg først lager en ny pokemon og deretter lagrer den.
+
+function togglePokemons(index) {
+    let countSaved = pokemonData.filter(pokemon => pokemon.savedStatus).length;
+    if (countSaved < 5) {
+        pokemonData[index].savedStatus = true;
+        let savedPokemons = pokemonData.filter(pokemon => pokemon.savedStatus === true)
+        showAllSavedPokemons(savedPokemons);
+        console.log(savedPokemons);
+    } else {
+        alert("Du kan bare lagre 5 Pokemon! Slett en eller fler for å lage plass til dine favoritter.")
+    }
+    
+}
+
+function showAllSavedPokemons(savedPokemons) {
+    const savedContainer = document.getElementById("saved-container");
+    savedContainer.innerHTML = "";
+    savedContainer.style.display = "grid";
+    savedContainer.style.grid = "1fr/repeat(5, 1fr)"
+    savedContainer.style.gap = "10px";
+
+        savedPokemons.forEach((pokemon, index) => {
+          if (pokemon.savedStatus) {
+            const savePokemonCard = document.createElement("div");
+            savePokemonCard.style.border = "1px solid grey";
+            savePokemonCard.style.display = "flex";
+            savePokemonCard.style.flexDirection = "column";
+            savePokemonCard.style.alignItems = "center";
+            savePokemonCard.style.flexBasis = "auto";
+            savePokemonCard.style.borderRadius = "10px";
+            savePokemonCard.innerHTML = `
+            <img src="${pokemon.image}" style="width: 100px" />
+            <h3>Navn: ${pokemon.name}</h3>
+            <h3>Type: ${pokemon.type}</h3>
+            `;
+            
+              const pokemonType = pokemon.type;
+              pokemonCardColor(savePokemonCard, pokemonType);
+              
+              const deleteBtn = document.createElement("button")
+              deleteBtn.innerHTML = "Slett";
+              deleteBtn.addEventListener("click", () => {
+                  deleteSavedPokemon(savedPokemons, index, pokemon);
+                  showAllSavedPokemons(savedPokemons);
+              });
+
+              
+              savePokemonCard.appendChild(deleteBtn);  
+              savedContainer.appendChild(savePokemonCard);
+              
+              localStorage.setItem(
+                "savedPokemons",
+                JSON.stringify(savedPokemons)
+              );
+          }
+        })
+}
+
+function deleteSavedPokemon(savedPokemons, index, pokemon) {
+    let deletePoke = savedPokemons[index];
+    let deleteIndex = pokemonData.findIndex(pokemon => pokemon.name === deletePoke.name);
+    if (deleteIndex !== -1) {
+        pokemonData[deleteIndex].savedStatus = false;
+    }
+    savedPokemons.splice(index, 1);
+}
 
