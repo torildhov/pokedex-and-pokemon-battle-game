@@ -50,9 +50,8 @@
         <img src="/assets/17.png" />
       </button>
     </div>
-
+    <h4>Lag din egen Pokemon:</h4>
     <div id="create-pokemon-container">
-      <form id="create-pokemon-form">
         <label for="new-pokemon-name">Navn:</label>
         <input
           id="new-pokemon-name"
@@ -60,7 +59,7 @@
           placeholder="Skriv inn.."
           required
         />
-        <select id="new-pokemon-type">
+        <select id="new-pokemon-type" required>
           <option value="" disabled selected>Velg en type</option>
           <option value="bug">Bug</option>
           <option value="dark">Dark</option>
@@ -81,8 +80,7 @@
           <option value="steel">Steel</option>
           <option value="water">Water</option>
         </select>
-        <button type="submit">Lag Pokemon!</button>
-      </form>
+        <button id="new-pokemon-btn">Lag Pokemon!</button>
     </div>
 
     <div id="pokemon-container"></div>

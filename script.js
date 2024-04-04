@@ -1,20 +1,22 @@
 //OPPGAVE 1.1 - VISE ALLE POKEMON (50 STK)
 
 const pokemonContainer = document.getElementById("pokemon-container");
+pokemonContainer.style.paddingTop = "20px";
 let filterBtn = document.querySelectorAll(".filter-btn");
 filterBtn.forEach((btn) => {
-    btn.style.borderRadius = "10px";
-    btn.style.border = "1px solid grey"
-    btn.addEventListener("click", () => {
+  btn.style.borderRadius = "10px";
+  btn.style.border = "1px solid grey";
+  btn.addEventListener("click", () => {
     const type = btn.id;
-      getFilterType(type);
+    getFilterType(type);
   });
 });
 
 const showAllPokemonsBtn = document.getElementById("show-all-pokemons-btn");
 showAllPokemonsBtn.style.borderRadius = "10px";
 showAllPokemonsBtn.style.border = "1px solid grey";
-showAllPokemonsBtn.style.marginLeft ="20px"
+showAllPokemonsBtn.style.marginLeft = "20px";
+showAllPokemonsBtn.style.padding = "1px 20px";
 
 showAllPokemonsBtn.addEventListener("click", () => {
   showAllPokemons();
@@ -63,10 +65,9 @@ function showAllPokemons() {
 
   const btnsContainer = document.getElementById("btns-container");
   btnsContainer.style.display = "grid";
-    btnsContainer.style.grid = "auto auto auto/repeat(6, auto)";
-    btnsContainer.style.gap = "10px"
-    btnsContainer.style.padding = "20px 20px"
-    
+  btnsContainer.style.grid = "auto auto auto/repeat(6, auto)";
+  btnsContainer.style.gap = "10px";
+  btnsContainer.style.padding = "20px 20px";
 
   pokemonContainer.style.display = "grid";
   pokemonContainer.style.grid = "auto/auto auto auto auto auto";
@@ -77,24 +78,24 @@ function showAllPokemons() {
 
     document.body.style.padding = "50px 150px";
 
-    const filteredPokemonCard = document.createElement("div");
-    filteredPokemonCard.style.border = "1px solid grey";
-    filteredPokemonCard.style.display = "flex";
-    filteredPokemonCard.style.flexDirection = "column";
-    filteredPokemonCard.style.alignItems = "center";
-    filteredPokemonCard.style.flexBasis = "auto";
-      filteredPokemonCard.style.borderRadius = "10px";
-     
-      const pokemonType = pokemon.type;
-      pokemonCardColor(filteredPokemonCard, pokemonType);
+    const pokemonCard = document.createElement("div");
+    pokemonCard.style.border = "1px solid grey";
+    pokemonCard.style.display = "flex";
+    pokemonCard.style.flexDirection = "column";
+    pokemonCard.style.alignItems = "center";
+    pokemonCard.style.flexBasis = "auto";
+    pokemonCard.style.borderRadius = "10px";
+
+    const pokemonType = pokemon.type;
+    pokemonCardColor(pokemonCard, pokemonType);
 
     //Lagre knapp
     const saveBtn = document.createElement("button");
     saveBtn.innerHTML = "Lagre";
-      saveBtn.style.backgroundColor = "white";
-      saveBtn.style.borderRadius = "10px";
-      saveBtn.style.border = "1px solid grey";
-      saveBtn.style.padding = "5px";
+    saveBtn.style.backgroundColor = "white";
+    saveBtn.style.borderRadius = "10px";
+    saveBtn.style.border = "1px solid grey";
+    saveBtn.style.padding = "5px";
 
     saveBtn.addEventListener("click", function () {
       savePokemon(index);
@@ -103,10 +104,10 @@ function showAllPokemons() {
     //Slette knapp
     const deleteBtn = document.createElement("button");
     deleteBtn.innerHTML = "Slett";
-      deleteBtn.style.backgroundColor = "white";
-      deleteBtn.style.borderRadius = "10px";
-      deleteBtn.style.border = "1px solid grey";
-      deleteBtn.style.padding = "5px"
+    deleteBtn.style.backgroundColor = "white";
+    deleteBtn.style.borderRadius = "10px";
+    deleteBtn.style.border = "1px solid grey";
+    deleteBtn.style.padding = "5px";
 
     deleteBtn.addEventListener("click", function () {
       deletePokemon(index);
@@ -115,10 +116,10 @@ function showAllPokemons() {
     //Redigere knapp
     const editBtn = document.createElement("button");
     editBtn.innerHTML = "Rediger";
-      editBtn.style.backgroundColor = "white";
-      editBtn.style.borderRadius = "10px"
-      editBtn.style.border = "1px solid grey"
-      editBtn.style.padding = "5px";
+    editBtn.style.backgroundColor = "white";
+    editBtn.style.borderRadius = "10px";
+    editBtn.style.border = "1px solid grey";
+    editBtn.style.padding = "5px";
 
     editBtn.addEventListener("click", function () {
       editPokemon(index);
@@ -129,7 +130,7 @@ function showAllPokemons() {
     btnsDiv.style.justifyContent = "space-around";
     btnsDiv.style.gap = "10px";
 
-    filteredPokemonCard.innerHTML = `
+    pokemonCard.innerHTML = `
         <img src="${pokemon.image}" style="width: 100px" />
         <h3>Navn: ${pokemon.name}</h3>
         <h3>Type: ${pokemon.type}</h4>
@@ -137,8 +138,8 @@ function showAllPokemons() {
 
     btnsDiv.append(saveBtn, deleteBtn, editBtn);
 
-    filteredPokemonCard.append(btnsDiv);
-    pokemonContainer.append(filteredPokemonCard);
+    pokemonCard.append(btnsDiv);
+    pokemonContainer.append(pokemonCard);
   });
 }
 
@@ -152,58 +153,82 @@ function getFilterType(type) {
 }
 
 function filterPokemons(filter, type) {
-    
-    if (filter.length > 0) {
-        pokemonContainer.innerHTML = "";
-        filter.forEach((pokemon) => {
-            const filteredPokemonCard = document.createElement("div");
-            filteredPokemonCard.style.border = "1px solid grey";
-            filteredPokemonCard.style.display = "flex";
-            filteredPokemonCard.style.flexDirection = "column";
-            filteredPokemonCard.style.alignItems = "center";
-            filteredPokemonCard.style.flexBasis = "auto";
-            filteredPokemonCard.style.borderRadius = "10px";
+  if (filter.length > 0) {
+    pokemonContainer.innerHTML = "";
+    filter.forEach((pokemon) => {
+      const filteredPokemonCard = document.createElement("div");
+      filteredPokemonCard.style.border = "1px solid grey";
+      filteredPokemonCard.style.display = "flex";
+      filteredPokemonCard.style.flexDirection = "column";
+      filteredPokemonCard.style.alignItems = "center";
+      filteredPokemonCard.style.flexBasis = "auto";
+      filteredPokemonCard.style.borderRadius = "10px";
 
-            const filteredPokemonType = pokemon.type;
-            pokemonCardColor(filteredPokemonCard, pokemon.type);
-            
-            filteredPokemonCard.innerHTML = `
+      const filteredPokemonType = pokemon.type;
+      pokemonCardColor(filteredPokemonCard, pokemon.type);
+
+      filteredPokemonCard.innerHTML = `
                 <img src="${pokemon.image}" style="width: 100px" />
                 <h3>Navn: ${pokemon.name}</h3>
             <h3>Type: ${pokemon.type}</h4>
         `;
-            
-            pokemonContainer.append(filteredPokemonCard);
-        });
-    } else {
-        alert(
-            "Det finnes ingen pokemons i denne kategorien! Prøv en av de andre knappene."
-        );
-    }
+
+      pokemonContainer.append(filteredPokemonCard);
+    });
+  } else {
+    alert(
+      "Det finnes ingen pokemons i denne kategorien! Prøv en av de andre knappene."
+    );
+  }
 }
 
 function pokemonCardColor(card, type) {
-    const pokemonCardColors = {
-      bug: "#A1C83E",
-      dark: "#6E7C93",
-      dragon: "#5F90B9",
-      electric: "#EAC937",
-      fairy: "#F889DB",
-      fighting: "#E9708C",
-      fire: "#F89945",
-      flying: "#5E82CC",
-      ghost: "#4856BA",
-      grass: "#4CC571",
-      ground: "#D5864A",
-      ice: "#68C4C9",
-      normal: "#798B9B",
-      poison: "#B45EDA",
-      psychic: "#F76E74",
-      rock: "#AF9B64",
-      steel: "#568A9E",
-      water: "#349FD7",
-    };
+  const pokemonCardColors = {
+    bug: "#A1C83E",
+    dark: "#6E7C93",
+    dragon: "#5F90B9",
+    electric: "#EAC937",
+    fairy: "#F889DB",
+    fighting: "#E9708C",
+    fire: "#F89945",
+    flying: "#5E82CC",
+    ghost: "#4856BA",
+    grass: "#4CC571",
+    ground: "#D5864A",
+    ice: "#68C4C9",
+    normal: "#798B9B",
+    poison: "#B45EDA",
+    psychic: "#F76E74",
+    rock: "#AF9B64",
+    steel: "#568A9E",
+    water: "#349FD7",
+  };
 
-    const typeColor = pokemonCardColors[type] || "white";
-    card.style.backgroundColor = typeColor;
+  const typeColor = pokemonCardColors[type] || "white";
+  card.style.backgroundColor = typeColor;
 }
+
+//OPPGAVE 1.4 - Lag din egen pokemon
+
+function makeNewPokemon() {
+  let newPokemonName = document.getElementById("new-pokemon-name");
+  let newPokemonType = document.getElementById("new-pokemon-type");
+  let randomPokemonNumber = Math.floor(Math.random() * 500) + 1;
+  let randomPokemonImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${randomPokemonNumber}.svg`;
+  let newPokemon = {
+    name: newPokemonName.value,
+    image: randomPokemonImage,
+    type: newPokemonType.value,
+  };
+
+  pokemonData.unshift(newPokemon);
+  showAllPokemons();
+
+  localStorage.setItem("savedPokemons", JSON.stringify(newPokemon));
+}
+
+const newPokemonBtn = document.getElementById("new-pokemon-btn");
+newPokemonBtn.addEventListener("click", () => {
+  makeNewPokemon();
+});
+
