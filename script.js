@@ -109,7 +109,5 @@ function showAllPokemons() {
     });
 }
 
-
-
-
+showAllPokemons();
 
