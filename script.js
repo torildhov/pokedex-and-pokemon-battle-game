@@ -376,7 +376,6 @@ function editPokemon(index) {
 
   let userInputPokemonName = prompt("Skriv inn et nytt navn til Pokemonen!");
   let userInputPokemonType = prompt("Skriv inn en ny type til Pokemonen!");
-
   let userInputPokemonTypeLowerCase = userInputPokemonType.toLowerCase();
 
   const pokemonTypesValues = newPokemonType.options;
@@ -386,7 +385,7 @@ function editPokemon(index) {
     existingPokemonTypes.push(pokemonTypesValues[i].value);
   }
 
-  let savedNewPokemon = JSON.parse(localStorage.getItem("savedPokemon"));
+  let savedNewPokemon = JSON.parse(localStorage.getItem("savedPokemon")) || [];
 
   savedNewPokemon.forEach((pokemon) => {
     pokemon.name = pokemon.name.toLowerCase();
@@ -402,12 +401,13 @@ function editPokemon(index) {
 
     if (pokemonIndex !== -1) {
       savedNewPokemon[pokemonIndex].type = userInputPokemonType;
-      savedNewPokemon[pokemonIndex].name = userInputPokemonName;
-
+        savedNewPokemon[pokemonIndex].name = userInputPokemonName; 
+      console.log("Updated Saved Pokemon in Local Storage:", savedNewPokemon);
       localStorage.setItem("savedPokemon", JSON.stringify(savedNewPokemon));
     }
   } else {
     alert("du må skrive inn en kjent type Pokemon!");
   }
+
   showAllPokemon();
 }
