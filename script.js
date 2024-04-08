@@ -333,15 +333,15 @@ function showAllSavedPokemons(savedPokemons) {
 //VIRKER
 function deleteSavedPokemon(savedPokemons, index) {
   let deletePoke = savedPokemons[index];
-  
+
   let deleteIndex = pokemonArray.findIndex(
     (pokemon) => pokemon.name === deletePoke.name
   );
   if (deleteIndex !== -1) {
     pokemonArray[deleteIndex].savedStatus = false;
   }
-    savedPokemons.splice(index, 1);
-    localStorage.setItem("savedPokemons", JSON.stringify(savedPokemons));
+  savedPokemons.splice(index, 1);
+  localStorage.setItem("savedPokemons", JSON.stringify(savedPokemons));
 }
 
 //OPPGAVE 1.5 - slette pokemons fra hovedutstillingen
@@ -365,7 +365,6 @@ function deletePokemon(index) {
     } else {
       console.log("Finner ikke Pokemon");
     }
-      
   }
   showAllPokemon();
 }
@@ -376,8 +375,8 @@ function editPokemon(index) {
   const editedPokemon = pokemonArray[index];
 
   let userInputPokemonName = prompt("Skriv inn et nytt navn til Pokemonen!");
-
   let userInputPokemonType = prompt("Skriv inn en ny type til Pokemonen!");
+
   let userInputPokemonTypeLowerCase = userInputPokemonType.toLowerCase();
 
   const pokemonTypesValues = newPokemonType.options;
@@ -387,13 +386,28 @@ function editPokemon(index) {
     existingPokemonTypes.push(pokemonTypesValues[i].value);
   }
 
+  let savedNewPokemon = JSON.parse(localStorage.getItem("savedPokemon"));
+
+  savedNewPokemon.forEach((pokemon) => {
+    pokemon.name = pokemon.name.toLowerCase();
+  });
+
+  let pokemonIndex = savedNewPokemon.findIndex(
+    (pokemon) => pokemon.name === editedPokemon.name.toLowerCase()
+  );
+
   if (existingPokemonTypes.includes(userInputPokemonTypeLowerCase)) {
-    editedPokemon.type = userInputPokemonType;
+    editedPokemon.type = userInputPokemonTypeLowerCase;
     editedPokemon.name = userInputPokemonName;
 
+    if (pokemonIndex !== -1) {
+      savedNewPokemon[pokemonIndex].type = userInputPokemonType;
+      savedNewPokemon[pokemonIndex].name = userInputPokemonName;
+
+      localStorage.setItem("savedPokemon", JSON.stringify(savedNewPokemon));
+    }
   } else {
     alert("du må skrive inn en kjent type Pokemon!");
   }
-
   showAllPokemon();
 }
