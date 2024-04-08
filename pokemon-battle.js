@@ -10,100 +10,62 @@ const pikachuContainer = document.getElementById("pikachu-container");
 const charmanderContainer = document.getElementById("charmander-container");
 const squirtleContainer = document.getElementById("squirtle-container");
 
-let battleData = [];
+const pikachuData = [];
+const charmanderData = [];
+const squirtleData = [];
+const pokemonData = [];
 
-async function getPokemonLinks() {
+async function fetchBattleData(pokemonName) {
   try {
-    const linkRequest = await fetch(
-      "https://pokeapi.co/api/v2/pokemon?limit=25"
+    const battleRequest = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
     );
-    const linkResult = await linkRequest.json();
-    let links = linkResult.results.map((link) => link.url);
-    return links;
-  } catch {
-    console.log("Feil med å hente inn pokemonlinker");
-  }
-}
-console.log(getPokemonLinks());
+    const battleResponse = await battleRequest.json();
 
-async function getPokemonData(links) {
-  try {
-    const dataRequest = await fetch(links);
-    const dataResult = await dataRequest.json();
-
-    let image = dataResult.sprites.other.dream_world.front_default;
-    let name = dataResult.name;
-
-    //filtrere ut shadow and unknown
-    let eighteenPokemonTypes = dataResult.types
-      .map((type) => type.type.name)
-      .filter((type) => type !== "shadow" && type !== "unknown");
-
-    let firstType = eighteenPokemonTypes[0];
-
-    let hp = dataResult.stats[0].base_stat;
-    let attack = dataResult.stats[1].base_stat;
-    let defense = dataResult.stats[2].base_stat;
-    let specialAttack = dataResult.stats[3].base_stat;
-    let specialDefense = dataResult.stats[4].base_stat;
-
-    return {
-      name,
-      image,
-      type: firstType,
-      hp,
-      attack,
-      defense,
-      specialAttack,
-      specialDefense,
-    };
+    pokemonData.push({
+      name: battleResponse.name,
+      image: battleResponse.sprites.other.dream_world.front_default,
+      hp: battleResponse.stats[0].base_stat,
+      attack: battleResponse.stats[1].base_stat,
+      defense: battleResponse.stats[2].base_stat,
+      specialAttack: battleResponse.stats[3].base_stat,
+      specialDefense: battleResponse.stats[4].base_stat,
+    });
   } catch (error) {
-    console.error("Feil med å hente inn pokemondetaljer", error);
+    console.error("Error fetching Pokemon data:", error);
   }
 }
 
-//Funksjon for å populere globale array
-async function initializePokemons() {
-  try {
-    const links = await getPokemonLinks();
+async function fetchPikachuCharmanderAndSquirtle() {
+  await fetchBattleData("pikachu");
+  await fetchBattleData("charmander");
+  await fetchBattleData("squirtle");
 
-    for (const pokemonLinks of links) {
-      const pokemonData = await getPokemonData(pokemonLinks);
-
-      battleData.push(pokemonData);
-    }
-    showPikachuCharmanderAndSquirtle();
-  } catch (error) {
-    console.error("Feil med å laste inn pokemons", error);
-  }
+  showPikachuCharmanderAndSquirtle();
 }
-initializePokemons();
-console.log("VIRKER", battleData);
+
+fetchPikachuCharmanderAndSquirtle();
+
+console.log("Pokemon data:", pokemonData);
 
 function showPikachuCharmanderAndSquirtle() {
   mainContainer.innerHTML = "";
 
   // Pikachu
-  const pikachu = battleData.find((pokemon) => pokemon.name === "pikachu");
   const pikachuImage = document.createElement("img");
-  pikachuImage.src = pikachu.image;
+  pikachuImage.src = pokemonData[0].image;
   pikachuImage.style.width = "15vw";
   pikachuContainer.appendChild(pikachuImage);
 
   // Charmander
-  const charmander = battleData.find(
-    (pokemon) => pokemon.name === "charmander"
-  );
-
   const charmanderImage = document.createElement("img");
-  charmanderImage.src = charmander.image;
+  charmanderImage.src = pokemonData[1].image;
   charmanderImage.style.width = "15vw";
   charmanderContainer.appendChild(charmanderImage);
 
   // Squirtle
-  const squirtle = battleData.find((pokemon) => pokemon.name === "squirtle");
   const squirtleImage = document.createElement("img");
-  squirtleImage.src = squirtle.image;
+  squirtleImage.src = pokemonData[2].image;
   squirtleImage.style.width = "15vw";
   squirtleContainer.appendChild(squirtleImage);
 
@@ -116,6 +78,7 @@ function showPikachuCharmanderAndSquirtle() {
 }
 
 function styleBattleground() {
+  //Styling av bilder
   const imageContainers = document.getElementsByClassName("image-container");
   for (let container of imageContainers) {
     container.style.position = "absolute";
@@ -133,3 +96,5 @@ function styleBattleground() {
   squirtle.style.top = "30%";
   squirtle.style.left = "45%";
 }
+
+function makeHealthBars() {}
