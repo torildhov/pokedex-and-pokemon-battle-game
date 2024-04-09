@@ -9,12 +9,12 @@ const mainContainer = document.getElementById("main-container");
 
 const pikachuContainer = document.getElementById("pikachu-container");
 const charmanderContainer = document.getElementById("charmander-container");
-const squirtleContainer = document.getElementById("squirtle-container");
+const bulbasaurContainer = document.getElementById("bulbasaur-container");
 const hpContainer = document.getElementById("hp-container");
 
 const pikachuData = [];
 const charmanderData = [];
-const squirtleData = [];
+const bulbasaurData = [];
 const pokemonData = [];
 
 async function fetchBattleData(pokemonName) {
@@ -39,19 +39,19 @@ async function fetchBattleData(pokemonName) {
   }
 }
 
-async function fetchPikachuCharmanderAndSquirtle() {
+async function fetchPikachuCharmanderAndBulbasaur() {
   await fetchBattleData("pikachu");
   await fetchBattleData("charmander");
-  await fetchBattleData("squirtle");
+  await fetchBattleData("bulbasaur");
 
-  showPikachuCharmanderAndSquirtle();
+  showPikachuCharmanderAndBulbasaur();
 }
 
-fetchPikachuCharmanderAndSquirtle();
+fetchPikachuCharmanderAndBulbasaur();
 
 console.log("Pokemon data:", pokemonData);
 
-function showPikachuCharmanderAndSquirtle() {
+function showPikachuCharmanderAndBulbasaur() {
   mainContainer.innerHTML = "";
 
   pokemonData.forEach((pokemon, index) => {
@@ -107,9 +107,9 @@ function styleBattleground() {
   charmander.style.bottom = "7%";
   charmander.style.right = "18%";
 
-  const squirtle = document.querySelector(".squirtle");
-  squirtle.style.top = "30%";
-  squirtle.style.left = "45%";
+  const bulbasaur = document.querySelector(".bulbasaur");
+  bulbasaur.style.top = "30%";
+  bulbasaur.style.left = "45%";
 }
 
 function showPokemonHp() {
@@ -117,7 +117,7 @@ function showPokemonHp() {
   hpContainer.style.position = "absolute";
   hpContainer.style.zIndex = "5";
   hpContainer.style.top = "5%";
-  hpContainer.style.right = "45%";
+  hpContainer.style.right = "20%";
 
   pokemonData.forEach((pokemon) => {
     const capName =
@@ -141,8 +141,14 @@ function showPokemonHp() {
     hpBarFill.style.height = "100%";
     hpBarFill.style.backgroundColor = "red";
 
+    const hpText = document.createElement("p");
+    hpText.innerHTML = `${pokemon.hp} / ${pokemon.initialHp}`;
+    hpText.style.color = "white";
+    hpText.style.fontSize = "1rem"
+    hpText.style.marginTop = "0px"
+
     hpBar.appendChild(hpBarFill);
-    hpContainer.append(nameContainer, hpBar);
+    hpContainer.append(nameContainer, hpBar, hpText);
   });
   mainContainer.appendChild(hpContainer);
 }
