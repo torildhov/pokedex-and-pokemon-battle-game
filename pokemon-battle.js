@@ -12,10 +12,8 @@ const charmanderContainer = document.getElementById("charmander-container");
 const bulbasaurContainer = document.getElementById("bulbasaur-container");
 const hpContainer = document.getElementById("hp-container");
 
-const pikachuData = [];
-const charmanderData = [];
-const bulbasaurData = [];
 const pokemonData = [];
+const winnerPictures = [];
 
 async function fetchBattleData(pokemonName) {
   try {
@@ -50,6 +48,37 @@ async function fetchPikachuCharmanderAndBulbasaur() {
 fetchPikachuCharmanderAndBulbasaur();
 
 console.log("Pokemon data:", pokemonData);
+
+async function fetchWinnerPictures(pokemonName) {
+  try {
+    const request = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
+    );
+    const response = await request.json();
+
+    winnerPictures.push({
+      name: response.name,
+      image: response.sprites.other.dream_world.front_default,
+      hp: response.stats[0].base_stat,
+      initialHp: response.stats[0].base_stat,
+      attack: response.stats[1].base_stat,
+      defense: response.stats[2].base_stat,
+      specialAttack: response.stats[3].base_stat,
+      specialDefense: response.stats[4].base_stat,
+    });
+  } catch (error) {
+    console.error("Error fetching Pokemon bilder:", error);
+  }
+}
+
+async function fetchRaichuIvysaurAndCharmeleon() {
+  await fetchWinnerPictures("raichu");
+  await fetchWinnerPictures("ivysaur");
+  await fetchWinnerPictures("charmeleon");
+}
+fetchRaichuIvysaurAndCharmeleon();
+
+console.log("Winner pictures and data:",winnerPictures);
 
 function showPikachuCharmanderAndBulbasaur() {
   mainContainer.innerHTML = "";
@@ -123,7 +152,6 @@ function showPokemonHp() {
     const capName =
       pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
     const nameContainer = document.createElement("p");
-    nameContainer.innerHTML = "Pikachu";
     nameContainer.style.margin = "2px";
     nameContainer.innerHTML = capName;
     nameContainer.style.color = "white";
@@ -170,13 +198,19 @@ function pokemonAttack(attackerIndex, defenders) {
   );
   if (activeDefenders.length === 0) {
     alert(`Alle de andre pokemonene har besvimt. ${attacker.name} har vunnet!`);
-    return;
+    evolveWinner(attacker.name);
+    return; 
   }
 
   const randomDefenderIndex = Math.floor(
     Math.random() * activeDefenders.length
   );
   const defender = activeDefenders[randomDefenderIndex];
+
+  if (!defender) {
+    alert(`Alle de andre pokemonene har besvimt! ${attacker.name} kan ikke angripe.`);
+    return;
+  }
 
   const attackPower = attacker.attack;
   const defensePower = defender.defense;
@@ -211,7 +245,6 @@ function pokemonAttack(attackerIndex, defenders) {
     );
     specialAttackAlert[defender.name] = true;
   }
-
   showPokemonHp();
 }
 
@@ -220,7 +253,7 @@ function specialPokemonAttack(attackerIndex) {
   const attacker = pokemonData[attackerIndex];
 
   if (attacker.hp === 0) {
-    alert(`${attacker.name} har besvimt og kan ikke angripe!.`);
+    alert(`${attacker.name} har besvimt og kan ikke angripe.`);
     return;
   }
 
@@ -235,9 +268,8 @@ function specialPokemonAttack(attackerIndex) {
     (defender) => defender.hp > 0 && defender !== attacker
   );
   if (activeDefenders.length === 0) {
-    console.log(
-      `Alle de andre pokemonene har besvimt. ${attacker.name} har vunnet!`
-    );
+    alert(`Alle de andre pokemonene har besvimt. ${attacker.name} har vunnet!`);
+    evolveWinner(attacker.name);
     return;
   }
 
@@ -245,6 +277,12 @@ function specialPokemonAttack(attackerIndex) {
     Math.random() * activeDefenders.length
   );
   const defender = activeDefenders[randomDefenderIndex];
+
+  if (!defender) {
+    alert(
+      `Alle de andre pokemonene har besvimt! ${attacker.name} kan ikke angripe.`);
+    return;
+  }
 
   const specialAttackPower = attacker.specialAttack;
   const defensePower = defender.defense;
@@ -273,5 +311,32 @@ function specialPokemonAttack(attackerIndex) {
   }
   showPokemonHp();
 }
- 
+
+//EVOLVE FUNKSJON
+function evolveWinner(winnerName) {
+  let evolvedForm;
+  if (winnerName === "pikachu") {
+    evolvedForm = winnerPictures.find((pokemon) => pokemon.name === "raichu");
+  } else if (winnerName === "charmander") {
+    evolvedForm = winnerPictures.find(
+      (pokemon) => pokemon.name === "charmeleon"
+    );
+  } else if (winnerName === "bulbasaur") {
+    evolvedForm = winnerPictures.find((pokemon) => pokemon.name === "ivysaur");
+  }
+
+  if (evolvedForm) {
+    const winnerContainer = document.querySelector(`.${winnerName}`);
+    if (winnerContainer) {
+      const winnerImage = winnerContainer.querySelector("img");
+      if (winnerImage) {
+        winnerImage.src = evolvedForm.image;
+      }
+    }
+    alert(`${winnerName} har utviklet seg til ${evolvedForm.name}!`);
+  }
+}
+
+
+
 
