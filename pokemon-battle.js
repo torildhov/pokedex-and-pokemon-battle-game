@@ -148,5 +148,124 @@ function showPokemonHp() {
 }
 
 
+//NORMALT ANGREP FUNKSJON
+let specialAttackAlert = {};
+
+function pokemonAttack(attackerIndex, defenders) {
+  const attacker = pokemonData[attackerIndex];
+
+  if (attacker.hp === 0) {
+    alert(`${attacker.name} har besvimt og kan ikke angripe.`);
+    return;
+  }
+
+  const activeDefenders = defenders.filter(
+    (defender) => defender.hp > 0 && defender !== attacker
+  );
+  if (activeDefenders.length === 0) {
+    alert(`Alle de andre pokemonene har besvimt. ${attacker.name} har vunnet!`);
+    return;
+  }
+
+  const randomDefenderIndex = Math.floor(
+    Math.random() * activeDefenders.length
+  );
+  const defender = activeDefenders[randomDefenderIndex];
+
+  const attackPower = attacker.attack;
+  const defensePower = defender.defense;
+
+  let damage = attackPower - defensePower;
+  if (damage < 0) {
+    damage = 0;
+  }
+
+  const defenderIndex = pokemonData.findIndex(
+    (pokemon) => pokemon.name === defender.name
+  );
+  if (defenderIndex !== -1) {
+    pokemonData[defenderIndex].hp -= damage;
+    if (pokemonData[defenderIndex].hp < 0) {
+      pokemonData[defenderIndex].hp = 0;
+    }
+  }
+
+  if (pokemonData[defenderIndex].hp !== 0) {
+    alert(`${attacker.name} angrepet ${defender.name} med ${damage} damage!`);
+  } else {
+    alert(`${defender.name} har besvimt!`);
+  }
+
+  if (
+    defender.hp <= defender.initialHp * 0.5 &&
+    !specialAttackAlert[defender.name]
+  ) {
+    alert(
+      `${defender.name} har nå 50% eller mindre HP og kan bruke speical attack!`
+    );
+    specialAttackAlert[defender.name] = true;
+  }
+
+  showPokemonHp();
+}
+
+//SPECIAL ATTACK FUNKSJON
+function specialPokemonAttack(attackerIndex) {
+  const attacker = pokemonData[attackerIndex];
+
+  if (attacker.hp === 0) {
+    alert(`${attacker.name} har besvimt og kan ikke angripe!.`);
+    return;
+  }
+
+  if (attacker.hp > attacker.initialHp * 0.5) {
+    alert(
+      `${attacker.name} kan ikke bruke special attack fordi hp er 50% eller mer.`
+    );
+    return;
+  }
+
+  const activeDefenders = pokemonData.filter(
+    (defender) => defender.hp > 0 && defender !== attacker
+  );
+  if (activeDefenders.length === 0) {
+    console.log(
+      `Alle de andre pokemonene har besvimt. ${attacker.name} har vunnet!`
+    );
+    return;
+  }
+
+  const randomDefenderIndex = Math.floor(
+    Math.random() * activeDefenders.length
+  );
+  const defender = activeDefenders[randomDefenderIndex];
+
+  const specialAttackPower = attacker.specialAttack;
+  const defensePower = defender.defense;
+
+  let damage = specialAttackPower - defensePower;
+  if (damage < 0) {
+    damage = 0;
+  }
+
+  const defenderIndex = pokemonData.findIndex(
+    (pokemon) => pokemon.name === defender.name
+  );
+  if (defenderIndex !== -1) {
+    pokemonData[defenderIndex].hp -= damage;
+    if (pokemonData[defenderIndex].hp < 0) {
+      pokemonData[defenderIndex].hp = 0;
+    }
+  }
+
+  if (pokemonData[defenderIndex].hp !== 0) {
+    alert(
+      `${attacker.name} brukte special attack på ${defender.name} med ${damage} damage!`
+    );
+  } else {
+    alert(`${defender.name} har besvimt!`);
+  }
+  showPokemonHp();
+}
  
 
