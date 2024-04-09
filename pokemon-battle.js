@@ -28,6 +28,7 @@ async function fetchBattleData(pokemonName) {
       name: battleResponse.name,
       image: battleResponse.sprites.other.dream_world.front_default,
       hp: battleResponse.stats[0].base_stat,
+      initialHp: battleResponse.stats[0].base_stat,
       attack: battleResponse.stats[1].base_stat,
       defense: battleResponse.stats[2].base_stat,
       specialAttack: battleResponse.stats[3].base_stat,
@@ -53,14 +54,38 @@ console.log("Pokemon data:", pokemonData);
 function showPikachuCharmanderAndSquirtle() {
   mainContainer.innerHTML = "";
 
-  pokemonData.forEach((pokemon) => {
+  pokemonData.forEach((pokemon, index) => {
+    const pokemonContainer = document.createElement("div");
+    pokemonContainer.classList = "pokemon-container";
+    pokemonContainer.classList.add(pokemon.name, "image-container");
+
+    //Bilder
     const pokemonImage = document.createElement("img");
     pokemonImage.src = pokemon.image;
     pokemonImage.style.width = "15vw";
-    pokemonImage.classList.add(pokemon.name, "image-container");
-   
 
-    mainContainer.append(pokemonImage);
+    //Knapper
+    const buttonsContainer = document.createElement("div");
+
+    const attackButton = document.createElement("button");
+    attackButton.innerHTML = "Attack";
+    attackButton.addEventListener("click", () => {
+      const defenders = pokemonData.filter((i) => i !== index);
+      pokemonAttack(index, defenders);
+    });
+
+    const specialAttackButton = document.createElement("button");
+    specialAttackButton.innerHTML = "Special attack";
+    specialAttackButton.addEventListener("click", () => {
+      specialPokemonAttack(index);
+    });
+
+    buttonsContainer.append(
+      attackButton,
+      specialAttackButton
+    );
+    pokemonContainer.append(pokemonImage, buttonsContainer);
+    mainContainer.append(pokemonContainer);
   });
 
   styleBattleground();
@@ -68,11 +93,10 @@ function showPikachuCharmanderAndSquirtle() {
 }
 
 function styleBattleground() {
-  //Styling av bilder
-  const imageContainers = document.getElementsByClassName("image-container");
-  for (let container of imageContainers) {
+  const pokemonContainers =
+    document.getElementsByClassName("pokemon-container");
+  for (let container of pokemonContainers) {
     container.style.position = "absolute";
-
   }
 
   const pikachu = document.querySelector(".pikachu");
@@ -112,13 +136,17 @@ function showPokemonHp() {
     hpBar.style.marginBottom = "10px";
 
     const hpBarFill = document.createElement("div");
-    const hpPercentage = (pokemon.hp / 100) * 100;
-    hpBarFill.style.width = `${hpPercentage}`;
+    const hpPercentage = (pokemon.hp / pokemon.initialHp) * 100;
+    hpBarFill.style.width = `${hpPercentage}%`;
     hpBarFill.style.height = "100%";
     hpBarFill.style.backgroundColor = "red";
 
     hpBar.appendChild(hpBarFill);
     hpContainer.append(nameContainer, hpBar);
-    mainContainer.appendChild(hpContainer);
   });
+  mainContainer.appendChild(hpContainer);
 }
+
+
+ 
+
