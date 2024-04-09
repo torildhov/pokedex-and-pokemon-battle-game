@@ -6,9 +6,11 @@ document.body.style.height = "100vh";
 document.body.style.overflow = "hidden";
 
 const mainContainer = document.getElementById("main-container");
+
 const pikachuContainer = document.getElementById("pikachu-container");
 const charmanderContainer = document.getElementById("charmander-container");
 const squirtleContainer = document.getElementById("squirtle-container");
+const hpContainer = document.getElementById("hp-container");
 
 const pikachuData = [];
 const charmanderData = [];
@@ -51,30 +53,18 @@ console.log("Pokemon data:", pokemonData);
 function showPikachuCharmanderAndSquirtle() {
   mainContainer.innerHTML = "";
 
-  // Pikachu
-  const pikachuImage = document.createElement("img");
-  pikachuImage.src = pokemonData[0].image;
-  pikachuImage.style.width = "15vw";
-  pikachuContainer.appendChild(pikachuImage);
+  pokemonData.forEach((pokemon) => {
+    const pokemonImage = document.createElement("img");
+    pokemonImage.src = pokemon.image;
+    pokemonImage.style.width = "15vw";
+    pokemonImage.classList.add(pokemon.name, "image-container");
+   
 
-  // Charmander
-  const charmanderImage = document.createElement("img");
-  charmanderImage.src = pokemonData[1].image;
-  charmanderImage.style.width = "15vw";
-  charmanderContainer.appendChild(charmanderImage);
+    mainContainer.append(pokemonImage);
+  });
 
-  // Squirtle
-  const squirtleImage = document.createElement("img");
-  squirtleImage.src = pokemonData[2].image;
-  squirtleImage.style.width = "15vw";
-  squirtleContainer.appendChild(squirtleImage);
-
-  mainContainer.append(
-    pikachuContainer,
-    charmanderContainer,
-    squirtleContainer
-  );
   styleBattleground();
+  showPokemonHp();
 }
 
 function styleBattleground() {
@@ -82,6 +72,7 @@ function styleBattleground() {
   const imageContainers = document.getElementsByClassName("image-container");
   for (let container of imageContainers) {
     container.style.position = "absolute";
+
   }
 
   const pikachu = document.querySelector(".pikachu");
@@ -97,4 +88,37 @@ function styleBattleground() {
   squirtle.style.left = "45%";
 }
 
-function makeHealthBars() {}
+function showPokemonHp() {
+  hpContainer.innerHTML = "";
+  hpContainer.style.position = "absolute";
+  hpContainer.style.zIndex = "5";
+  hpContainer.style.top = "5%";
+  hpContainer.style.right = "45%";
+
+  pokemonData.forEach((pokemon) => {
+    const capName =
+      pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+    const nameContainer = document.createElement("p");
+    nameContainer.innerHTML = "Pikachu";
+    nameContainer.style.margin = "2px";
+    nameContainer.innerHTML = capName;
+    nameContainer.style.color = "white";
+    nameContainer.style.fontSize = "1.5rem";
+
+    const hpBar = document.createElement("div");
+    hpBar.style.width = "200px";
+    hpBar.style.height = "20px";
+    hpBar.style.backgroundColor = "white";
+    hpBar.style.marginBottom = "10px";
+
+    const hpBarFill = document.createElement("div");
+    const hpPercentage = (pokemon.hp / 100) * 100;
+    hpBarFill.style.width = `${hpPercentage}`;
+    hpBarFill.style.height = "100%";
+    hpBarFill.style.backgroundColor = "red";
+
+    hpBar.appendChild(hpBarFill);
+    hpContainer.append(nameContainer, hpBar);
+    mainContainer.appendChild(hpContainer);
+  });
+}
