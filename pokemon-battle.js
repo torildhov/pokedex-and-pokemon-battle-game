@@ -59,12 +59,7 @@ async function fetchWinnerPictures(pokemonName) {
     winnerPictures.push({
       name: response.name,
       image: response.sprites.other.dream_world.front_default,
-      hp: response.stats[0].base_stat,
-      initialHp: response.stats[0].base_stat,
-      attack: response.stats[1].base_stat,
-      defense: response.stats[2].base_stat,
-      specialAttack: response.stats[3].base_stat,
-      specialDefense: response.stats[4].base_stat,
+      
     });
   } catch (error) {
     console.error("Error fetching Pokemon bilder:", error);
@@ -78,17 +73,17 @@ async function fetchRaichuIvysaurAndCharmeleon() {
 }
 fetchRaichuIvysaurAndCharmeleon();
 
-console.log("Winner pictures and data:",winnerPictures);
+console.log("Winner pictures and data:", winnerPictures);
 
 function showPikachuCharmanderAndBulbasaur() {
   mainContainer.innerHTML = "";
 
   pokemonData.forEach((pokemon, index) => {
     const pokemonContainer = document.createElement("div");
-    pokemonContainer.classList = "pokemon-container";
-    pokemonContainer.classList.add(pokemon.name, "image-container");
+    pokemonContainer.classList = "pokemon-container"; //????
+    pokemonContainer.classList.add(pokemon.name, "image-container"); //??
 
-    //Bilder
+    //Pokemonbilder
     const pokemonImage = document.createElement("img");
     pokemonImage.src = pokemon.image;
     pokemonImage.style.width = "15vw";
@@ -115,12 +110,29 @@ function showPikachuCharmanderAndBulbasaur() {
       specialPokemonAttack(index);
     });
 
-    buttonsContainer.append(
-      attackButton,
-      specialAttackButton
-    );
+    const healButton = document.createElement("button");
+    healButton.innerHTML = "Heal";
+    healButton.addEventListener("click", () => {
+      healPokemon(index);
+    });
+
+    //Bærbilder
+    const berryImageContainer = document.createElement("div");
+    berryImageContainer.classList = `${pokemon.name}-berry berry-container`;
+    const berryImage = document.createElement("img");
+    berryImage.src = "/assets/berry.png";
+    berryImage.style.width = "5em";
+    berryImage.addEventListener("mouseover", () => {
+      berryImage.style.transform = "scale(1.1)";
+    });
+    berryImage.addEventListener("mouseout", () => {
+      berryImage.style.transform = "scale(1)";
+    });
+
+    buttonsContainer.append(attackButton, specialAttackButton, healButton);
     pokemonContainer.append(pokemonImage, buttonsContainer);
-    mainContainer.append(pokemonContainer);
+    berryImageContainer.append(berryImage);
+    mainContainer.append(pokemonContainer, berryImageContainer);
   });
 
   styleBattleground();
@@ -132,7 +144,6 @@ function styleBattleground() {
     document.getElementsByClassName("pokemon-container");
   for (let container of pokemonContainers) {
     container.style.position = "absolute";
-    
   }
 
   const pikachu = document.querySelector(".pikachu");
@@ -146,14 +157,52 @@ function styleBattleground() {
   const bulbasaur = document.querySelector(".bulbasaur");
   bulbasaur.style.top = "30%";
   bulbasaur.style.left = "45%";
+
+  const allButtons = document.querySelectorAll("button");
+  for (let button of allButtons) {
+    button.style.backgroundColor = "white";
+    button.style.border = "2px solid orange";
+    button.style.color = "black";
+    button.style.padding = "4px 7px"
+    button.style.margin = "5px"
+    button.style.borderRadius = "10px"
+    button.style.fontSize = "1em"
+    button.style.fontFamily = "helvetica"
+    button.style.cursor = "pointer";
+    button.addEventListener("mouseover", () => {
+      button.style.transform = "scale(1.1)";
+    });
+    button.addEventListener("mouseout", () => {
+      button.style.transform = "scale(1)";
+    });
+  }
+
+  const berryContainers = document.getElementsByClassName("berry-container");
+  for (let container of berryContainers) {
+    container.style.position = "absolute";
+  }
+
+  const pikachuBerry = document.querySelector(".pikachu-berry");
+  pikachuBerry.style.bottom = "12%";
+  pikachuBerry.style.left = "30%";
+
+  const charmanderBerry = document.querySelector(".charmander-berry");
+  charmanderBerry.style.bottom = "12%";
+  charmanderBerry.style.right = "17%";
+
+  const bulbasaurBerry = document.querySelector(".bulbasaur-berry");
+  bulbasaurBerry.style.top = "45%";
+  bulbasaurBerry.style.left = "40%";
 }
 
 function showPokemonHp() {
   hpContainer.innerHTML = "";
   hpContainer.style.position = "absolute";
   hpContainer.style.zIndex = "5";
-  hpContainer.style.top = "5%";
-  hpContainer.style.right = "20%";
+  hpContainer.style.top = "18%";
+  hpContainer.style.left = "2%";
+  hpContainer.style.backdropFilter = "blur(5px)";
+  hpContainer.style.padding = "10px";
 
   pokemonData.forEach((pokemon) => {
     const capName =
@@ -163,6 +212,7 @@ function showPokemonHp() {
     nameContainer.innerHTML = capName;
     nameContainer.style.color = "white";
     nameContainer.style.fontSize = "1.5rem";
+    nameContainer.style.fontFamily = "helvetica"
 
     const hpBar = document.createElement("div");
     hpBar.style.width = "200px";
@@ -179,15 +229,14 @@ function showPokemonHp() {
     const hpText = document.createElement("p");
     hpText.innerHTML = `${pokemon.hp} / ${pokemon.initialHp}`;
     hpText.style.color = "white";
-    hpText.style.fontSize = "1rem"
-    hpText.style.marginTop = "0px"
+    hpText.style.fontSize = "1rem";
+    hpText.style.marginTop = "0px";
 
     hpBar.appendChild(hpBarFill);
     hpContainer.append(nameContainer, hpBar, hpText);
   });
   mainContainer.appendChild(hpContainer);
 }
-
 
 //NORMALT ANGREP FUNKSJON
 let specialAttackAlert = {};
@@ -206,7 +255,7 @@ function pokemonAttack(attackerIndex, defenders) {
   if (activeDefenders.length === 0) {
     alert(`Alle de andre pokemonene har besvimt. ${attacker.name} har vunnet!`);
     evolveWinner(attacker.name);
-    return; 
+    return;
   }
 
   const randomDefenderIndex = Math.floor(
@@ -215,7 +264,9 @@ function pokemonAttack(attackerIndex, defenders) {
   const defender = activeDefenders[randomDefenderIndex];
 
   if (!defender) {
-    alert(`Alle de andre pokemonene har besvimt! ${attacker.name} kan ikke angripe.`);
+    alert(
+      `Alle de andre pokemonene har besvimt! ${attacker.name} kan ikke angripe.`
+    );
     return;
   }
 
@@ -287,7 +338,8 @@ function specialPokemonAttack(attackerIndex) {
 
   if (!defender) {
     alert(
-      `Alle de andre pokemonene har besvimt! ${attacker.name} kan ikke angripe.`);
+      `Alle de andre pokemonene har besvimt! ${attacker.name} kan ikke angripe.`
+    );
     return;
   }
 
@@ -344,6 +396,55 @@ function evolveWinner(winnerName) {
   }
 }
 
+//HEALE FUNKSJON
+
+function healPokemon(index) {
+  const heal = Math.floor(Math.random) * 11;
+  let healedPokemon = pokemonData[index];
+  if (healedPokemon.hp === 0) {
+    alert(`${healedPokemon.name} har allerede besvimt, og da er det litt vanskelig å spise bær!`)
+    return;
+  }
+
+  if(healedPokemon.hp === healedPokemon.initialHp) {
+    alert(
+      `${healedPokemon.name} har allerede full hp og trenger ikke mer bær!`
+    );
+    return;
+  }
 
 
+  const hpIncrease = Math.floor(Math.random() * 21);
+  if (hpIncrease >= 15 && hpIncrease <=20) {
+    pokemonMegaEvolution(healedPokemon);
+    return;
+  }
+
+  const healedPokemonNewHp = Math.min(
+    healedPokemon.hp + hpIncrease,
+    healedPokemon.initialHp
+  );
+
+  console.log(
+    "HpIncrease",
+    hpIncrease,
+    "healedPokemonNewHp:",
+    healedPokemonNewHp
+  );
+
+  healedPokemon.hp = healedPokemonNewHp;
+
+  alert(
+    `${healedPokemon.name} spiste ${hpIncrease} bær og hp økte derfor til ${healedPokemonNewHp}. Nam!`
+  );
+
+  showPokemonHp();
+
+  //Kilde: https://stackoverflow.com/questions/11122438/using-javascript-setinterval-function-to-achieve-animate-effectslower-than-i-ex
+  const berryRotate = document.querySelector(`.${healedPokemon.name}-berry`);
+  if (berryRotate) {
+    berryRotate.style.transform = "rotate(360deg)";
+    berryRotate.style.transition = "-webkit-transform 0.5s ease-in-out";
+  }
+}
 
