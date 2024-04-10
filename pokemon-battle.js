@@ -294,8 +294,14 @@ function pokemonAttack(attackerIndex, defenders) {
     }
   }
 
-  if (defender.hp <= defender.initialHp * 0.5 && defender.hp > defender.initialHp * 0.01 && !specialAttackAlert[defender.name]) {
-    alert(`${defender.name} har nå 50% eller mindre HP og kan bruke speical attack!`);
+  if (
+    defender.hp <= defender.initialHp * 0.5 &&
+    defender.hp > defender.initialHp * 0.01 &&
+    !specialAttackAlert[defender.name]
+  ) {
+    alert(
+      `${defender.name} har nå 50% eller mindre HP og kan bruke speical attack!`
+    );
     specialAttackAlert[defender.name] = true;
   } else if (pokemonData[defenderIndex].hp !== 0) {
     alert(`${attacker.name} angrepet ${defender.name} med ${damage} damage!`);
@@ -372,8 +378,8 @@ function specialPokemonAttack(attackerIndex) {
 
 //EVOLVE FUNKSJON
 function evolveWinner(winnerName) {
-    alert(`Alle de andre pokemonene har besvimt. ${winnerName} har vunnet!`);
-  
+  alert(`Alle de andre pokemonene har besvimt. ${winnerName} har vunnet!`);
+
   let evolvedForm;
   if (winnerName === "pikachu") {
     evolvedForm = winnerPictures.find((pokemon) => pokemon.name === "raichu");
@@ -395,9 +401,13 @@ function evolveWinner(winnerName) {
     }
     alert(`${winnerName} har utviklet seg til ${evolvedForm.name}!`);
   }
+  let winnerScreenImage = evolvedForm.image;
+  let winnerScreenName = evolvedForm.name;
+  winnerScreen(winnerScreenImage, winnerScreenName);
 }
 
-  /*setTimeout(() => {
+function winnerScreen(image, name) {
+  setTimeout(() => {
     const winnerScreen = document.createElement("div");
     winnerScreen.style.display = "flex";
     winnerScreen.style.flexDirection = "column";
@@ -412,18 +422,19 @@ function evolveWinner(winnerName) {
     winnerScreen.style.left = "0";
 
     const winnerText = document.createElement("p");
-    winnerText.innerHTML = `${evolvedForm.name} har vunnet!`.toUpperCase();
+    winnerText.innerHTML = `${name} har vunnet!`.toUpperCase();
     winnerText.style.fontFamily = "helvetica";
     winnerText.style.fontSize = "2em";
     winnerText.style.color = "white";
 
     const winnerPicture = document.createElement("img");
-    winnerPicture.src = winnerPhoto;
+    winnerPicture.src = image;
     winnerPicture.style.width = "45vw";
 
     winnerScreen.append(winnerText, winnerPicture);
     document.body.appendChild(winnerScreen);
-  }, 3000);*/
+  }, 1000);
+}
 
 //HEALE FUNKSJON
 
@@ -513,6 +524,14 @@ function pokemonMegaEvolution(evolveIndex) {
 
     pokemonData.splice(evolveIndex, 1, evolvedForm);
 
-    alert(`${megaEvolve.name} har spist et magisk bær og megautviklet seg ${evolvedForm.name}!`);
+    alert(
+      `${megaEvolve.name} har spist et magisk bær og megautviklet seg ${evolvedForm.name}!`
+    );
   }
 }
+
+
+//Til i morgen: 
+//1. ordne winner screen for allerede evolved pokemon
+//2. ordne alert når allerede evolved pokemon vinner (raichu til raichu)
+//3. se på index.js
