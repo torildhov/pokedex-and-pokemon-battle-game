@@ -59,7 +59,12 @@ async function fetchWinnerPictures(pokemonName) {
     winnerPictures.push({
       name: response.name,
       image: response.sprites.other.dream_world.front_default,
-      
+      hp: response.stats[0].base_stat,
+      initialHp: response.stats[0].base_stat,
+      attack: response.stats[1].base_stat,
+      defense: response.stats[2].base_stat,
+      specialAttack: response.stats[3].base_stat,
+      specialDefense: response.stats[4].base_stat,
     });
   } catch (error) {
     console.error("Error fetching Pokemon bilder:", error);
@@ -70,6 +75,8 @@ async function fetchRaichuIvysaurAndCharmeleon() {
   await fetchWinnerPictures("raichu");
   await fetchWinnerPictures("ivysaur");
   await fetchWinnerPictures("charmeleon");
+  await fetchWinnerPictures("venusaur");
+  await fetchWinnerPictures("charizard");
 }
 fetchRaichuIvysaurAndCharmeleon();
 
@@ -163,11 +170,11 @@ function styleBattleground() {
     button.style.backgroundColor = "white";
     button.style.border = "2px solid orange";
     button.style.color = "black";
-    button.style.padding = "4px 7px"
-    button.style.margin = "5px"
-    button.style.borderRadius = "10px"
-    button.style.fontSize = "1em"
-    button.style.fontFamily = "helvetica"
+    button.style.padding = "4px 7px";
+    button.style.margin = "5px";
+    button.style.borderRadius = "10px";
+    button.style.fontSize = "1em";
+    button.style.fontFamily = "helvetica";
     button.style.cursor = "pointer";
     button.addEventListener("mouseover", () => {
       button.style.transform = "scale(1.1)";
@@ -212,7 +219,7 @@ function showPokemonHp() {
     nameContainer.innerHTML = capName;
     nameContainer.style.color = "white";
     nameContainer.style.fontSize = "1.5rem";
-    nameContainer.style.fontFamily = "helvetica"
+    nameContainer.style.fontFamily = "helvetica";
 
     const hpBar = document.createElement("div");
     hpBar.style.width = "200px";
@@ -253,7 +260,6 @@ function pokemonAttack(attackerIndex, defenders) {
     (defender) => defender.hp > 0 && defender !== attacker
   );
   if (activeDefenders.length === 0) {
-    alert(`Alle de andre pokemonene har besvimt. ${attacker.name} har vunnet!`);
     evolveWinner(attacker.name);
     return;
   }
@@ -288,21 +294,15 @@ function pokemonAttack(attackerIndex, defenders) {
     }
   }
 
-  if (pokemonData[defenderIndex].hp !== 0) {
+  if (defender.hp <= defender.initialHp * 0.5 && defender.hp > defender.initialHp * 0.01 && !specialAttackAlert[defender.name]) {
+    alert(`${defender.name} har nå 50% eller mindre HP og kan bruke speical attack!`);
+    specialAttackAlert[defender.name] = true;
+  } else if (pokemonData[defenderIndex].hp !== 0) {
     alert(`${attacker.name} angrepet ${defender.name} med ${damage} damage!`);
   } else {
     alert(`${defender.name} har besvimt!`);
   }
 
-  if (
-    defender.hp <= defender.initialHp * 0.5 &&
-    !specialAttackAlert[defender.name]
-  ) {
-    alert(
-      `${defender.name} har nå 50% eller mindre HP og kan bruke speical attack!`
-    );
-    specialAttackAlert[defender.name] = true;
-  }
   showPokemonHp();
 }
 
@@ -326,7 +326,6 @@ function specialPokemonAttack(attackerIndex) {
     (defender) => defender.hp > 0 && defender !== attacker
   );
   if (activeDefenders.length === 0) {
-    alert(`Alle de andre pokemonene har besvimt. ${attacker.name} har vunnet!`);
     evolveWinner(attacker.name);
     return;
   }
@@ -373,6 +372,8 @@ function specialPokemonAttack(attackerIndex) {
 
 //EVOLVE FUNKSJON
 function evolveWinner(winnerName) {
+    alert(`Alle de andre pokemonene har besvimt. ${winnerName} har vunnet!`);
+  
   let evolvedForm;
   if (winnerName === "pikachu") {
     evolvedForm = winnerPictures.find((pokemon) => pokemon.name === "raichu");
@@ -396,29 +397,54 @@ function evolveWinner(winnerName) {
   }
 }
 
+  /*setTimeout(() => {
+    const winnerScreen = document.createElement("div");
+    winnerScreen.style.display = "flex";
+    winnerScreen.style.flexDirection = "column";
+    winnerScreen.style.alignItems = "center";
+    winnerScreen.style.justifyContent = "center";
+    winnerScreen.style.width = "100vw";
+    winnerScreen.style.height = "100vh";
+    winnerScreen.style.backgroundColor = "red";
+    winnerScreen.style.position = "fixed";
+    winnerScreen.style.zIndex = "1000";
+    winnerScreen.style.top = "0";
+    winnerScreen.style.left = "0";
+
+    const winnerText = document.createElement("p");
+    winnerText.innerHTML = `${evolvedForm.name} har vunnet!`.toUpperCase();
+    winnerText.style.fontFamily = "helvetica";
+    winnerText.style.fontSize = "2em";
+    winnerText.style.color = "white";
+
+    const winnerPicture = document.createElement("img");
+    winnerPicture.src = winnerPhoto;
+    winnerPicture.style.width = "45vw";
+
+    winnerScreen.append(winnerText, winnerPicture);
+    document.body.appendChild(winnerScreen);
+  }, 3000);*/
+
 //HEALE FUNKSJON
 
 function healPokemon(index) {
-  const heal = Math.floor(Math.random) * 11;
+  //const heal = Math.floor(Math.random() * 11);
   let healedPokemon = pokemonData[index];
   if (healedPokemon.hp === 0) {
-    alert(`${healedPokemon.name} har allerede besvimt, og da er det litt vanskelig å spise bær!`)
+    alert(
+      `${healedPokemon.name} har allerede besvimt, og da er det litt vanskelig å spise bær!`
+    );
     return;
   }
 
-  if(healedPokemon.hp === healedPokemon.initialHp) {
+  if (healedPokemon.hp === healedPokemon.initialHp) {
     alert(
       `${healedPokemon.name} har allerede full hp og trenger ikke mer bær!`
     );
     return;
   }
 
-
   const hpIncrease = Math.floor(Math.random() * 21);
-  if (hpIncrease >= 15 && hpIncrease <=20) {
-    pokemonMegaEvolution(healedPokemon);
-    return;
-  }
 
   const healedPokemonNewHp = Math.min(
     healedPokemon.hp + hpIncrease,
@@ -434,17 +460,59 @@ function healPokemon(index) {
 
   healedPokemon.hp = healedPokemonNewHp;
 
-  alert(
-    `${healedPokemon.name} spiste ${hpIncrease} bær og hp økte derfor til ${healedPokemonNewHp}. Nam!`
-  );
+  if (hpIncrease >= 15 && hpIncrease <= 20) {
+    pokemonMegaEvolution(index);
+  } else {
+    alert(
+      `${healedPokemon.name} spiste ${hpIncrease} bær og hp økte derfor til ${healedPokemonNewHp}. Nam!`
+    );
+    //Kilde: https://stackoverflow.com/questions/11122438/using-javascript-setinterval-function-to-achieve-animate-effectslower-than-i-ex
+    const berryRotate = document.querySelector(`.${healedPokemon.name}-berry`);
+    if (berryRotate) {
+      berryRotate.style.transform = "rotate(360deg)";
+      berryRotate.style.transition = "-webkit-transform 0.5s ease-in-out";
+    }
+  }
 
   showPokemonHp();
-
-  //Kilde: https://stackoverflow.com/questions/11122438/using-javascript-setinterval-function-to-achieve-animate-effectslower-than-i-ex
-  const berryRotate = document.querySelector(`.${healedPokemon.name}-berry`);
-  if (berryRotate) {
-    berryRotate.style.transform = "rotate(360deg)";
-    berryRotate.style.transition = "-webkit-transform 0.5s ease-in-out";
-  }
 }
 
+function pokemonMegaEvolution(evolveIndex) {
+  let megaEvolve = pokemonData[evolveIndex];
+  let evolvedForm;
+
+  if (megaEvolve.name === "pikachu") {
+    evolvedForm = winnerPictures.find((pokemon) => pokemon.name === "raichu");
+  } else if (megaEvolve.name === "charmander") {
+    evolvedForm = winnerPictures.find(
+      (pokemon) => pokemon.name === "charizard"
+    );
+  } else if (megaEvolve.name === "bulbasaur") {
+    evolvedForm = winnerPictures.find((pokemon) => pokemon.name === "venusaur");
+  }
+
+  if (evolvedForm) {
+    console.log(megaEvolve.name);
+
+    const pokemonContainer = document.querySelector(`.${megaEvolve.name}`);
+    if (pokemonContainer) {
+      const pokemonImage = pokemonContainer.querySelector("img");
+      if (pokemonImage) {
+        pokemonImage.src = evolvedForm.image;
+      }
+    }
+
+    megaEvolve.name = evolvedForm.name;
+    megaEvolve.image = evolvedForm.image;
+    megaEvolve.hp = evolvedForm.hp;
+    megaEvolve.initialHp = evolvedForm.initialHp;
+    megaEvolve.attack = evolvedForm.attack;
+    megaEvolve.defense = evolvedForm.defense;
+    megaEvolve.specialAttack = evolvedForm.specialAttack;
+    megaEvolve.specialDefense = evolvedForm.specialDefense;
+
+    pokemonData.splice(evolveIndex, 1, evolvedForm);
+
+    alert(`${megaEvolve.name} har spist et magisk bær og megautviklet seg ${evolvedForm.name}!`);
+  }
+}
