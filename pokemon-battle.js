@@ -92,6 +92,12 @@ function showPikachuCharmanderAndBulbasaur() {
     const pokemonImage = document.createElement("img");
     pokemonImage.src = pokemon.image;
     pokemonImage.style.width = "15vw";
+    pokemonImage.addEventListener("mouseover", () => {
+      pokemonImage.style.transform = "scale(1.1)";
+    });
+    pokemonImage.addEventListener("mouseout", () => {
+      pokemonImage.style.transform = "scale(1)";
+    });
 
     //Knapper
     const buttonsContainer = document.createElement("div");
@@ -126,6 +132,7 @@ function styleBattleground() {
     document.getElementsByClassName("pokemon-container");
   for (let container of pokemonContainers) {
     container.style.position = "absolute";
+    
   }
 
   const pikachu = document.querySelector(".pikachu");
