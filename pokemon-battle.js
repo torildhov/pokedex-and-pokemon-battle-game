@@ -1,62 +1,17 @@
-document.body.style.backgroundImage = "url('/assets/battle-bg.jpeg')";
-document.body.style.backgroundSize = "cover";
-document.body.style.backgroundRepeat = "no-repeat";
-document.body.style.width = "100%";
-document.body.style.height = "100vh";
-document.body.style.overflow = "hidden";
-
 const mainContainer = document.getElementById("main-container");
-
-const pikachuContainer = document.getElementById("pikachu-container");
-const charmanderContainer = document.getElementById("charmander-container");
-const bulbasaurContainer = document.getElementById("bulbasaur-container");
 const hpContainer = document.getElementById("hp-container");
 
 const pokemonData = [];
-const winnerPictures = [];
+const evolvedPokemonData = [];
 
-async function fetchBattleData(pokemonName) {
-  try {
-    const battleRequest = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
-    );
-    const battleResponse = await battleRequest.json();
-
-    pokemonData.push({
-      name: battleResponse.name,
-      image: battleResponse.sprites.other.dream_world.front_default,
-      hp: battleResponse.stats[0].base_stat,
-      initialHp: battleResponse.stats[0].base_stat,
-      attack: battleResponse.stats[1].base_stat,
-      defense: battleResponse.stats[2].base_stat,
-      specialAttack: battleResponse.stats[3].base_stat,
-      specialDefense: battleResponse.stats[4].base_stat,
-    });
-  } catch (error) {
-    console.error("Error fetching Pokemon data:", error);
-  }
-}
-
-async function fetchPikachuCharmanderAndBulbasaur() {
-  await fetchBattleData("pikachu");
-  await fetchBattleData("charmander");
-  await fetchBattleData("bulbasaur");
-
-  showPikachuCharmanderAndBulbasaur();
-}
-
-fetchPikachuCharmanderAndBulbasaur();
-
-console.log("Pokemon data:", pokemonData);
-
-async function fetchWinnerPictures(pokemonName) {
+async function fetchPokemonData(pokemonName) {
   try {
     const request = await fetch(
       `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
     );
     const response = await request.json();
 
-    winnerPictures.push({
+    const pokemon = {
       name: response.name,
       image: response.sprites.other.dream_world.front_default,
       hp: response.stats[0].base_stat,
@@ -65,32 +20,47 @@ async function fetchWinnerPictures(pokemonName) {
       defense: response.stats[2].base_stat,
       specialAttack: response.stats[3].base_stat,
       specialDefense: response.stats[4].base_stat,
-    });
+    };
+
+    if (
+      ["raichu", "ivysaur", "charmeleon", "venusaur", "charizard"].includes(
+        pokemonName
+      )
+    ) {
+      evolvedPokemonData.push(pokemon);
+    } else {
+      pokemonData.push(pokemon);
+    }
   } catch (error) {
-    console.error("Error fetching Pokemon bilder:", error);
+    console.error("Feil med å laste inn pokemondata", error);
   }
 }
 
-async function fetchRaichuIvysaurAndCharmeleon() {
-  await fetchWinnerPictures("raichu");
-  await fetchWinnerPictures("ivysaur");
-  await fetchWinnerPictures("charmeleon");
-  await fetchWinnerPictures("venusaur");
-  await fetchWinnerPictures("charizard");
+async function fetchPokemonPlayersData() {
+  await Promise.all([
+    fetchPokemonData("pikachu"),
+    fetchPokemonData("charmander"),
+    fetchPokemonData("bulbasaur"),
+    fetchPokemonData("raichu"),
+    fetchPokemonData("ivysaur"),
+    fetchPokemonData("charmeleon"),
+    fetchPokemonData("venusaur"),
+    fetchPokemonData("charizard"),
+  ]);
+
+  showPikachuCharmanderAndBulbasaur();
 }
-fetchRaichuIvysaurAndCharmeleon();
 
-console.log("Winner pictures and data:", winnerPictures);
+fetchPokemonPlayersData();
 
+//Vise pokemon på siden funksjon
 function showPikachuCharmanderAndBulbasaur() {
   mainContainer.innerHTML = "";
 
   pokemonData.forEach((pokemon, index) => {
     const pokemonContainer = document.createElement("div");
-    pokemonContainer.classList = "pokemon-container"; //????
-    pokemonContainer.classList.add(pokemon.name, "image-container"); //??
+    pokemonContainer.classList.add(pokemon.name, "pokemon-container");
 
-    //Pokemonbilder
     const pokemonImage = document.createElement("img");
     pokemonImage.src = pokemon.image;
     pokemonImage.style.width = "15vw";
@@ -101,8 +71,9 @@ function showPikachuCharmanderAndBulbasaur() {
       pokemonImage.style.transform = "scale(1)";
     });
 
-    //Knapper
     const buttonsContainer = document.createElement("div");
+    buttonsContainer.style.display = "grid";
+    buttonsContainer.style.grid = "auto/auto auto auto";
 
     const attackButton = document.createElement("button");
     attackButton.innerHTML = "Attack";
@@ -123,7 +94,6 @@ function showPikachuCharmanderAndBulbasaur() {
       healPokemon(index);
     });
 
-    //Bærbilder
     const berryImageContainer = document.createElement("div");
     berryImageContainer.classList = `${pokemon.name}-berry berry-container`;
     const berryImage = document.createElement("img");
@@ -146,7 +116,15 @@ function showPikachuCharmanderAndBulbasaur() {
   showPokemonHp();
 }
 
+//styling
 function styleBattleground() {
+  document.body.style.backgroundImage = "url('/assets/battle-bg.jpeg')";
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundRepeat = "no-repeat";
+  document.body.style.width = "100%";
+  document.body.style.height = "100vh";
+  document.body.style.overflow = "hidden";
+
   const pokemonContainers =
     document.getElementsByClassName("pokemon-container");
   for (let container of pokemonContainers) {
@@ -168,10 +146,10 @@ function styleBattleground() {
   const allButtons = document.querySelectorAll("button");
   for (let button of allButtons) {
     button.style.backgroundColor = "white";
-    button.style.border = "2px solid orange";
+    button.style.border = "0.15rem solid orange";
     button.style.color = "black";
-    button.style.padding = "4px 7px";
-    button.style.margin = "5px";
+    button.style.padding = "0.3rem 0.5rem";
+    button.style.margin = "0.3rem";
     button.style.borderRadius = "10px";
     button.style.fontSize = "1em";
     button.style.fontFamily = "helvetica";
@@ -202,30 +180,30 @@ function styleBattleground() {
   bulbasaurBerry.style.left = "40%";
 }
 
+//HP barer og stats funksjon
 function showPokemonHp() {
   hpContainer.innerHTML = "";
   hpContainer.style.position = "absolute";
-  hpContainer.style.zIndex = "5";
   hpContainer.style.top = "18%";
   hpContainer.style.left = "2%";
   hpContainer.style.backdropFilter = "blur(5px)";
-  hpContainer.style.padding = "10px";
+  hpContainer.style.padding = "0.5rem";
 
   pokemonData.forEach((pokemon) => {
-    const capName =
+    const pokemonNameCapitalised =
       pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
     const nameContainer = document.createElement("p");
-    nameContainer.style.margin = "2px";
-    nameContainer.innerHTML = capName;
+    nameContainer.style.margin = "0.2rem";
+    nameContainer.innerHTML = pokemonNameCapitalised;
     nameContainer.style.color = "white";
     nameContainer.style.fontSize = "1.5rem";
     nameContainer.style.fontFamily = "helvetica";
 
     const hpBar = document.createElement("div");
-    hpBar.style.width = "200px";
-    hpBar.style.height = "20px";
+    hpBar.style.width = "12rem";
+    hpBar.style.height = "1.1rem";
     hpBar.style.backgroundColor = "white";
-    hpBar.style.marginBottom = "10px";
+    hpBar.style.marginBottom = "0.01rem";
 
     const hpBarFill = document.createElement("div");
     const hpPercentage = (pokemon.hp / pokemon.initialHp) * 100;
@@ -237,7 +215,7 @@ function showPokemonHp() {
     hpText.innerHTML = `${pokemon.hp} / ${pokemon.initialHp}`;
     hpText.style.color = "white";
     hpText.style.fontSize = "1rem";
-    hpText.style.marginTop = "0px";
+    hpText.style.marginTop = "0rem";
 
     hpBar.appendChild(hpBarFill);
     hpContainer.append(nameContainer, hpBar, hpText);
@@ -245,7 +223,7 @@ function showPokemonHp() {
   mainContainer.appendChild(hpContainer);
 }
 
-//NORMALT ANGREP FUNKSJON
+//Normalt angrep funksjon
 let specialAttackAlert = {};
 
 function pokemonAttack(attackerIndex, defenders) {
@@ -268,13 +246,6 @@ function pokemonAttack(attackerIndex, defenders) {
     Math.random() * activeDefenders.length
   );
   const defender = activeDefenders[randomDefenderIndex];
-
-  if (!defender) {
-    alert(
-      `Alle de andre pokemonene har besvimt! ${attacker.name} kan ikke angripe.`
-    );
-    return;
-  }
 
   const attackPower = attacker.attack;
   const defensePower = defender.defense;
@@ -312,7 +283,7 @@ function pokemonAttack(attackerIndex, defenders) {
   showPokemonHp();
 }
 
-//SPECIAL ATTACK FUNKSJON
+//Special attack funksjon
 function specialPokemonAttack(attackerIndex) {
   const attacker = pokemonData[attackerIndex];
 
@@ -340,13 +311,6 @@ function specialPokemonAttack(attackerIndex) {
     Math.random() * activeDefenders.length
   );
   const defender = activeDefenders[randomDefenderIndex];
-
-  if (!defender) {
-    alert(
-      `Alle de andre pokemonene har besvimt! ${attacker.name} kan ikke angripe.`
-    );
-    return;
-  }
 
   const specialAttackPower = attacker.specialAttack;
   const defensePower = defender.defense;
@@ -376,21 +340,30 @@ function specialPokemonAttack(attackerIndex) {
   showPokemonHp();
 }
 
-//EVOLVE FUNKSJON
+//Evolve funksjon
 function evolveWinner(winnerName) {
-  alert(`Alle de andre pokemonene har besvimt. ${winnerName} har vunnet!`);
-
   let evolvedForm;
   if (winnerName === "pikachu") {
-    evolvedForm = winnerPictures.find((pokemon) => pokemon.name === "raichu");
+    evolvedForm = evolvedPokemonData.find(
+      (pokemon) => pokemon.name === "raichu"
+    );
   } else if (winnerName === "charmander") {
-    evolvedForm = winnerPictures.find(
+    evolvedForm = evolvedPokemonData.find(
       (pokemon) => pokemon.name === "charmeleon"
     );
   } else if (winnerName === "bulbasaur") {
-    evolvedForm = winnerPictures.find((pokemon) => pokemon.name === "ivysaur");
+    evolvedForm = evolvedPokemonData.find(
+      (pokemon) => pokemon.name === "ivysaur"
+    );
   }
 
+  if (!evolvedForm) {
+    evolvedForm = evolvedPokemonData.find(
+      (pokemon) => pokemon.name === winnerName
+    );
+  }
+
+  let winnerScreenImage;
   if (evolvedForm) {
     const winnerContainer = document.querySelector(`.${winnerName}`);
     if (winnerContainer) {
@@ -399,13 +372,25 @@ function evolveWinner(winnerName) {
         winnerImage.src = evolvedForm.image;
       }
     }
-    alert(`${winnerName} har utviklet seg til ${evolvedForm.name}!`);
+
+    if (evolvedForm.name !== winnerName) {
+      alert(`${winnerName} har utviklet seg til ${evolvedForm.name}!`);
+    }
+    winnerScreenImage = evolvedForm.image;
+  } else {
+    winnerScreenImage = "";
   }
-  let winnerScreenImage = evolvedForm.image;
-  let winnerScreenName = evolvedForm.name;
+
+  let winnerScreenName;
+  if (evolvedForm && evolvedForm.name !== winnerName) {
+    winnerScreenName = evolvedForm.name;
+  } else {
+    winnerScreenName = winnerName;
+  }
   winnerScreen(winnerScreenImage, winnerScreenName);
 }
 
+//Vinner screen funksjon
 function winnerScreen(image, name) {
   setTimeout(() => {
     const winnerScreen = document.createElement("div");
@@ -415,7 +400,9 @@ function winnerScreen(image, name) {
     winnerScreen.style.justifyContent = "center";
     winnerScreen.style.width = "100vw";
     winnerScreen.style.height = "100vh";
-    winnerScreen.style.backgroundColor = "red";
+    winnerScreen.style.background = "rgb(255, 2, 2);";
+    winnerScreen.style.background =
+      "radial-gradient(circle, rgba(255,2,2,1) 24%, rgba(255,237,0,1) 100%)"; //Kilde: https://cssgradient.io/
     winnerScreen.style.position = "fixed";
     winnerScreen.style.zIndex = "1000";
     winnerScreen.style.top = "0";
@@ -424,22 +411,25 @@ function winnerScreen(image, name) {
     const winnerText = document.createElement("p");
     winnerText.innerHTML = `${name} har vunnet!`.toUpperCase();
     winnerText.style.fontFamily = "helvetica";
-    winnerText.style.fontSize = "2em";
+    winnerText.style.fontSize = "3em";
     winnerText.style.color = "white";
 
     const winnerPicture = document.createElement("img");
     winnerPicture.src = image;
     winnerPicture.style.width = "45vw";
 
-    winnerScreen.append(winnerText, winnerPicture);
+    const winnerSong = document.createElement("audio");
+    winnerSong.src = "/assets/themesong.mp3";
+    winnerSong.type = "audio/mp3";
+    winnerSong.autoplay = "true";
+
+    winnerScreen.append(winnerText, winnerPicture, winnerSong);
     document.body.appendChild(winnerScreen);
-  }, 1000);
+  }, 1500);
 }
 
-//HEALE FUNKSJON
-
+//Heale funksjon
 function healPokemon(index) {
-  //const heal = Math.floor(Math.random() * 11);
   let healedPokemon = pokemonData[index];
   if (healedPokemon.hp === 0) {
     alert(
@@ -456,19 +446,10 @@ function healPokemon(index) {
   }
 
   const hpIncrease = Math.floor(Math.random() * 21);
-
   const healedPokemonNewHp = Math.min(
     healedPokemon.hp + hpIncrease,
     healedPokemon.initialHp
   );
-
-  console.log(
-    "HpIncrease",
-    hpIncrease,
-    "healedPokemonNewHp:",
-    healedPokemonNewHp
-  );
-
   healedPokemon.hp = healedPokemonNewHp;
 
   if (hpIncrease >= 15 && hpIncrease <= 20) {
@@ -477,6 +458,7 @@ function healPokemon(index) {
     alert(
       `${healedPokemon.name} spiste ${hpIncrease} bær og hp økte derfor til ${healedPokemonNewHp}. Nam!`
     );
+
     //Kilde: https://stackoverflow.com/questions/11122438/using-javascript-setinterval-function-to-achieve-animate-effectslower-than-i-ex
     const berryRotate = document.querySelector(`.${healedPokemon.name}-berry`);
     if (berryRotate) {
@@ -488,23 +470,26 @@ function healPokemon(index) {
   showPokemonHp();
 }
 
+//Megaevolve funksjon
 function pokemonMegaEvolution(evolveIndex) {
   let megaEvolve = pokemonData[evolveIndex];
   let evolvedForm;
 
   if (megaEvolve.name === "pikachu") {
-    evolvedForm = winnerPictures.find((pokemon) => pokemon.name === "raichu");
+    evolvedForm = evolvedPokemonData.find(
+      (pokemon) => pokemon.name === "raichu"
+    );
   } else if (megaEvolve.name === "charmander") {
-    evolvedForm = winnerPictures.find(
+    evolvedForm = evolvedPokemonData.find(
       (pokemon) => pokemon.name === "charizard"
     );
   } else if (megaEvolve.name === "bulbasaur") {
-    evolvedForm = winnerPictures.find((pokemon) => pokemon.name === "venusaur");
+    evolvedForm = evolvedPokemonData.find(
+      (pokemon) => pokemon.name === "venusaur"
+    );
   }
 
   if (evolvedForm) {
-    console.log(megaEvolve.name);
-
     const pokemonContainer = document.querySelector(`.${megaEvolve.name}`);
     if (pokemonContainer) {
       const pokemonImage = pokemonContainer.querySelector("img");
@@ -529,9 +514,3 @@ function pokemonMegaEvolution(evolveIndex) {
     );
   }
 }
-
-
-//Til i morgen: 
-//1. ordne winner screen for allerede evolved pokemon
-//2. ordne alert når allerede evolved pokemon vinner (raichu til raichu)
-//3. se på index.js
