@@ -264,10 +264,6 @@ newPokemonBtn.addEventListener("click", () => {
 //---Oppgave 1.4 - lagre favoritt pokemoner---
 //Funksjon for å toggle om pokemon er lagret eller ikke
 function togglePokemons(index) {
-  if (pokemonArray[index].savedStatus === true) {
-    alert("Denne pokemonen er allerede lagret! Velg en av de andre.");
-  }
-
   let countSaved = pokemonArray.filter((pokemon) => pokemon.savedStatus).length;
   if (countSaved < 5) {
     pokemonArray[index].savedStatus = true;
