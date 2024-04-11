@@ -266,11 +266,15 @@ newPokemonBtn.addEventListener("click", () => {
 function togglePokemons(index) {
   let countSaved = pokemonArray.filter((pokemon) => pokemon.savedStatus).length;
   if (countSaved < 5) {
-    pokemonArray[index].savedStatus = true;
-    let savedPokemons = pokemonArray.filter(
-      (pokemon) => pokemon.savedStatus === true
-    );
-    showAllSavedPokemons(savedPokemons);
+    if (!pokemonArray[index].savedStatus) {
+      pokemonArray[index].savedStatus = true;
+      let savedPokemons = pokemonArray.filter(
+        (pokemon) => pokemon.savedStatus === true
+      );
+      showAllSavedPokemons(savedPokemons);
+    } else {
+      alert("Denne pokemonen er allerede lagret! Velg en av de andre.");
+    }
   } else {
     alert(
       "Du kan bare lagre 5 Pokemon! Slett en eller fler for å lage plass til dine favoritter."
