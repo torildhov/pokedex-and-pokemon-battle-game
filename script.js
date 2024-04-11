@@ -23,7 +23,7 @@ const heading = document.getElementById("heading");
 heading.style.color = "Red";
 heading.style.fontSize = "3rem";
 heading.style.display = "flex";
-heading.style.justifyContent = "center"
+heading.style.justifyContent = "center";
 
 let pokemonArray = [];
 
@@ -175,7 +175,7 @@ styleFilterBtns();
 
 //Funksjon for å filtrere pokemon
 function filterPokemons(type) {
-   let filter = pokemonArray.filter((pokemon) => pokemon.type === type);
+  let filter = pokemonArray.filter((pokemon) => pokemon.type === type);
   if (filter.length > 0) {
     pokemonContainer.innerHTML = "";
     filter.forEach((pokemon) => {
@@ -257,13 +257,17 @@ function makeNewPokemon() {
   showAllPokemon();
 }
 
- newPokemonBtn.addEventListener("click", () => {
-   makeNewPokemon();
- });
+newPokemonBtn.addEventListener("click", () => {
+  makeNewPokemon();
+});
 
 //---Oppgave 1.4 - lagre favoritt pokemoner---
 //Funksjon for å toggle om pokemon er lagret eller ikke
 function togglePokemons(index) {
+  if (pokemonArray[index].savedStatus === true) {
+    alert("Denne pokemonen er allerede lagret! Velg en av de andre.");
+  }
+
   let countSaved = pokemonArray.filter((pokemon) => pokemon.savedStatus).length;
   if (countSaved < 5) {
     pokemonArray[index].savedStatus = true;
