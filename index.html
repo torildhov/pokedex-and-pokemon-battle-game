@@ -3,10 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pokemon</title>
+    <title>Pokédex</title>
   </head>
   <body>
-    <h1>Pokemon</h1>
+    <header>
+      <a href="pokemon-battle.html"><h2 id="battle-link">Pokemon Battle Spill</h2></a>
+    </header>
+    <h1 id="heading">Pokédex</h1>
     <button id="show-all-pokemons-btn">
       <img src="/assets/vis-alle.png" />
     </button>
@@ -52,38 +55,39 @@
     </div>
     <h4>Lag din egen Pokemon:</h4>
     <div id="create-pokemon-container">
-        <label for="new-pokemon-name">Navn:</label>
-        <input
-          id="new-pokemon-name"
-          type="text"
-          placeholder="Skriv inn.."
-          required
-        />
-        <select id="new-pokemon-type" required>
-          <option value="" disabled selected>Velg en type</option>
-          <option value="bug">Bug</option>
-          <option value="dark">Dark</option>
-          <option value="dragon">Dragon</option>
-          <option value="electric">Electric</option>
-          <option value="fairy">Fairy</option>
-          <option value="fighting">Fighting</option>
-          <option value="fire">Fire</option>
-          <option value="flying">Flying</option>
-          <option value="ghost">Ghost</option>
-          <option value="grass">Grass</option>
-          <option value="ground">Ground</option>
-          <option value="ice">Ice</option>
-          <option value="normal">Normal</option>
-          <option value="poison">Poison</option>
-          <option value="psychic">Psychic</option>
-          <option value="rock">Rock</option>
-          <option value="steel">Steel</option>
-          <option value="water">Water</option>
-        </select>
-        <button id="new-pokemon-btn">Lag Pokemon!</button>
+      <label for="new-pokemon-name">Navn:</label>
+      <input
+        id="new-pokemon-name"
+        type="text"
+        placeholder="Skriv inn.."
+        required
+      />
+      <label for="new-pokemon-type">Velg en type:</label>
+      <select id="new-pokemon-type" required>
+        <option value="bug">Bug</option>
+        <option value="dark">Dark</option>
+        <option value="dragon">Dragon</option>
+        <option value="electric">Electric</option>
+        <option value="fairy">Fairy</option>
+        <option value="fighting">Fighting</option>
+        <option value="fire">Fire</option>
+        <option value="flying">Flying</option>
+        <option value="ghost">Ghost</option>
+        <option value="grass">Grass</option>
+        <option value="ground">Ground</option>
+        <option value="ice">Ice</option>
+        <option value="normal">Normal</option>
+        <option value="poison">Poison</option>
+        <option value="psychic">Psychic</option>
+        <option value="rock">Rock</option>
+        <option value="steel">Steel</option>
+        <option value="water">Water</option>
+      </select>
+      <button id="new-pokemon-btn">Lag Pokemon!</button>
     </div>
     <h4>Lagrede Pokemon:</h4>
     <div id="saved-container"></div>
+    <h4>Alle Pokemon:</h4>
     <div id="pokemon-container"></div>
 
     <script src="/script.js"></script>

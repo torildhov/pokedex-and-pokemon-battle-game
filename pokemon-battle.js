@@ -1,5 +1,6 @@
 const mainContainer = document.getElementById("main-container");
 const hpContainer = document.getElementById("hp-container");
+const pokedexLink = document.getElementById("pokedex-link");
 
 const pokemonData = [];
 const evolvedPokemonData = [];
@@ -37,6 +38,7 @@ async function fetchPokemonData(pokemonName) {
 }
 
 async function fetchPokemonPlayersData() {
+  //Kilde: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all, https://www.youtube.com/watch?v=DHvZLI7Db8E&t=42s, https://www.w3schools.com/jsref/jsref_promise_all.asp
   await Promise.all([
     fetchPokemonData("pikachu"),
     fetchPokemonData("charmander"),
@@ -124,6 +126,13 @@ function styleBattleground() {
   document.body.style.width = "100%";
   document.body.style.height = "100vh";
   document.body.style.overflow = "hidden";
+
+  pokedexLink.style.fontFamily = "helvetica";
+  pokedexLink.style.color = "white";
+  pokedexLink.style.position = "absolute";
+  pokedexLink.style.top = "0.5rem";
+  pokedexLink.style.right = "1rem";
+  pokedexLink.style.textDecoration = "underline";
 
   const pokemonContainers =
     document.getElementsByClassName("pokemon-container");
@@ -251,9 +260,6 @@ function pokemonAttack(attackerIndex, defenders) {
   const defensePower = defender.defense;
 
   let damage = attackPower - defensePower;
-  if (damage < 0) {
-    damage = 0;
-  }
 
   const defenderIndex = pokemonData.findIndex(
     (pokemon) => pokemon.name === defender.name
@@ -377,8 +383,6 @@ function evolveWinner(winnerName) {
       alert(`${winnerName} har utviklet seg til ${evolvedForm.name}!`);
     }
     winnerScreenImage = evolvedForm.image;
-  } else {
-    winnerScreenImage = "";
   }
 
   let winnerScreenName;
@@ -400,7 +404,6 @@ function winnerScreen(image, name) {
     winnerScreen.style.justifyContent = "center";
     winnerScreen.style.width = "100vw";
     winnerScreen.style.height = "100vh";
-    winnerScreen.style.background = "rgb(255, 2, 2);";
     winnerScreen.style.background =
       "radial-gradient(circle, rgba(255,2,2,1) 24%, rgba(255,237,0,1) 100%)"; //Kilde: https://cssgradient.io/
     winnerScreen.style.position = "fixed";
@@ -446,6 +449,7 @@ function healPokemon(index) {
   }
 
   const hpIncrease = Math.floor(Math.random() * 21);
+  //Kilde: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/min, https://www.w3schools.com/jsref/jsref_min.asp
   const healedPokemonNewHp = Math.min(
     healedPokemon.hp + hpIncrease,
     healedPokemon.initialHp
