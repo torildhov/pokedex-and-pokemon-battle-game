@@ -421,12 +421,12 @@ function winnerScreen(image, name) {
     winnerPicture.src = image;
     winnerPicture.style.width = "45vw";
 
-    const winnerSong = document.createElement("audio");
+    /*const winnerSong = document.createElement("audio");
     winnerSong.src = "/assets/themesong.mp3";
     winnerSong.type = "audio/mp3";
-    winnerSong.autoplay = "true";
+    winnerSong.autoplay = "true";*/
 
-    winnerScreen.append(winnerText, winnerPicture, winnerSong);
+    winnerScreen.append(winnerText, winnerPicture/*, winnerSong*/);
     document.body.appendChild(winnerScreen);
   }, 1500);
 }

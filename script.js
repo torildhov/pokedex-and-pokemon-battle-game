@@ -233,7 +233,7 @@ function pokemonCardColor(card, type) {
   card.style.backgroundColor = typeColor;
 }
 
-//---Oppgave 1.4 - Lag din egen pokemon---
+//---Oppgave 1.3 - Lag din egen pokemon---
 //Funksjon for å lage egen pokemon
 function makeNewPokemon() {
   let randomPokemonNumber = Math.floor(Math.random() * 400) + 1;
