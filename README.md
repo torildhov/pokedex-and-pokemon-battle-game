@@ -43,7 +43,7 @@ An interactive Pokémon web application featuring two main components: a compreh
 ## Installation
 1. Clone the repository:
 ```
-git clone https://github.com/yourusername/pokedex-battle-application.git
+git clone https://github.com/torildhov/pokedex-battle-application.git
 ```
 
 2. Navigate to the project directory:
